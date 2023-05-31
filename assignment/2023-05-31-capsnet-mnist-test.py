@@ -168,41 +168,6 @@ class CapsNet(nn.Module):
         reconstruction = self.decoder((out * pred.unsqueeze(2)).contiguous().view(batch_size, -1))
 
         return logits, reconstruction
-    
-
-class CapsNetWithReconstruction(nn.Module):
-    def __init__(self, capsnet, reconstruction_net):
-        super(CapsNetWithReconstruction, self).__init__()
-        self.capsnet = capsnet
-        self.reconstruction_net = reconstruction_net
-
-    def forward(self, x, target):
-        x, probs = self.capsnet(x)
-        reconstruction = self.reconstruction_net(x, target)
-        return reconstruction, probs
-    
-
-class ReconstructionNet(nn.Module):
-    def __init__(self, n_dim=16, n_classes=10):
-        super(ReconstructionNet, self).__init__()
-        self.fc1 = nn.Linear(n_dim * n_classes, 512)
-        self.fc2 = nn.Linear(512, 1024)
-        self.fc3 = nn.Linear(1024, 784)
-        self.n_dim = n_dim
-        self.n_classes = n_classes
-
-    def forward(self, x, target):
-        mask = Variable(torch.zeros((x.size()[0], self.n_classes)), requires_grad=False)
-        if next(self.parameters()).is_cuda:
-            mask = mask.cuda()
-        mask.scatter_(1, target.view(-1, 1), 1.)
-        mask = mask.unsqueeze(2)
-        x = x * mask
-        x = x.view(-1, self.n_dim * self.n_classes)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.sigmoid(self.fc3(x))
-        return x
 
 
 class CapsuleLoss(nn.Module):
@@ -274,7 +239,7 @@ def main():
         shuffle=True)
 
     # Train
-    EPOCHES = 10
+    EPOCHES = 20
     model.train()
     for ep in range(EPOCHES):
         batch_id = 1
@@ -311,8 +276,6 @@ def main():
         pred_labels = torch.argmax(logits, dim=1)
         correct += torch.sum(pred_labels == torch.argmax(labels, dim=1)).item()
         total += len(labels)
-        
-        torch.save(model.state_dict(), 'model_reconstruction.pth')
     print('Accuracy: {}'.format(correct / total))
     accuracy = correct / total
     #print(prof.key_averages().table(sort_by="self_cpu_time_total", row_limit=1000)) 

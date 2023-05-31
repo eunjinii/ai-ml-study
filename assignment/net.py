@@ -275,6 +275,7 @@ if __name__ == '__main__':
         train(epoch)
         test_loss = test()
         scheduler.step(test_loss)
-        torch.save(model.state_dict(),
-                   '{:03d}_model_dict_{}routing_reconstruction{}.pth'.format(epoch, args.routing_iterations,
-                                                                             args.with_reconstruction))
+        
+    torch.save(model.state_dict(),
+                'model_dict_{}routing_reconstruction_{}.pth'.format(args.routing_iterations,
+                                                                            args.with_reconstruction))
