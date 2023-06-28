@@ -37,9 +37,6 @@ class Stack:
     self.height -= 1
     return temp
 
-    
-    
-    
 my_stack = Stack(2)
 my_stack.push(1)
 my_stack.push(80)
