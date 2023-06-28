@@ -127,7 +127,22 @@ class DoublyLinkedList():
         temp.prev = None
 
         self.length -= 1
-        return temp.value
+        return temp
+    
+    def reverse(self):
+        #        (1) -> (2) -> (3) -> (4)
+        # before curr  after 
+        curr = self.head 
+        
+        while (curr):
+            temp_next = curr.next
+            curr.next = curr.prev
+            curr.prev = temp_next
+            curr = temp_next
+        
+        temp = self.head 
+        self.head = self.tail 
+        self.tail = temp
 
 
 my_doubly_linked_list = DoublyLinkedList(12)
