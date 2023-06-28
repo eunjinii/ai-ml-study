@@ -130,15 +130,17 @@ class DoublyLinkedList():
         return temp
     
     def reverse(self):
-        #        (1) -> (2) -> (3) -> (4)
-        # before curr  after 
+        #      (1) -> (2) -> (3) -> (4)
+        # prev curr  next 
         curr = self.head 
         
         while (curr):
-            temp_next = curr.next
-            curr.next = curr.prev
-            curr.prev = temp_next
-            curr = temp_next
+            temp = curr.next # curr 다음 것을 temp로 임시저장
+            
+            curr.next = curr.prev # curr 노드 한 개에 대해서만 prev, next 스왑
+            curr.prev = temp
+            
+            curr = temp # curr 한 칸 옮김
         
         temp = self.head 
         self.head = self.tail 
