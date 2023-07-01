@@ -1,3 +1,4 @@
+# 이미 sort된 두 리스트를 merge할 때 씀
 def merge(list1, list2):
     combined = []
     i = 0
@@ -19,16 +20,16 @@ def merge(list1, list2):
     return combined
 
 
-# 이미 sort된 두 리스트를 merge할 때 씀
 list1 = [2, 5, 7, 8, 41]
 list2 = [4, 9, 10, 12, 87]
 
 print(merge(list1, list2))
 
-
+# original list stays the same, and it returns a separate sorted list
 def merge_sort(my_list):
-    if len(my_list) == 1:
+    if len(my_list) == 1: # base case
         return my_list
+    
     mid_index = int(len(my_list) / 2)  # for odd case
 
     # 분리 작업이 여기서 이루어지므로, merge_sort를 여기다 재귀적으로 작성.
@@ -36,3 +37,7 @@ def merge_sort(my_list):
     right = merge_sort(my_list[mid_index:])
 
     return merge(left, right)
+
+original_list = [5,6,8,1,2,0,3]
+
+print(merge_sort(original_list))
